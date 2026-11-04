@@ -24,17 +24,20 @@ const { product } = Astro.props;
 </article>
 
 <style>
-	.product-card { min-width: 0; }
+	.product-card { min-width: 0; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+	.product-card:hover { transform: translateY(-4px); }
 	.product-card[hidden] { display: none; }
 	.product-image-wrap { position: relative; aspect-ratio: .81; overflow: hidden; background: #e2dfd8; }
 	.product-image-link { display: block; width: 100%; height: 100%; }
-	.product-image-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .65s cubic-bezier(.2,.7,.2,1); }
-	.product-card:hover .product-image-wrap img { transform: scale(1.04); }
+	.product-image-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .5s; }
+	.product-card:hover .product-image-wrap img { transform: scale(1.055); filter: saturate(.92); }
 	.product-tag { position: absolute; top: 12px; left: 12px; background: #f7f5f0e8; color: #272722; padding: 6px 9px; text-transform: uppercase; letter-spacing: .1em; font-size: 7px; }
-	.quick-add { position: absolute; bottom: 11px; left: 11px; right: 11px; display: flex; justify-content: space-between; align-items: center; border: 0; padding: 12px 13px; background: #f7f5f0ed; color: #272722; cursor: pointer; font-size: 9px; text-align: left; transform: translateY(calc(100% + 15px)); opacity: 0; transition: transform .24s, opacity .24s, background .2s; }
-	.quick-add span:last-child { font-size: 16px; }
+	.quick-add { position: absolute; bottom: 11px; left: 11px; right: 11px; display: flex; justify-content: space-between; align-items: center; border: 0; padding: 12px 13px; background: #f7f5f0ed; color: #272722; cursor: pointer; font-size: 9px; text-align: left; transform: translateY(calc(100% + 15px)); opacity: 0; transition: transform .38s cubic-bezier(.2,.7,.2,1), opacity .3s, background .2s; }
+	.quick-add span:last-child { font-size: 16px; transition: transform .25s; }
 	.product-card:hover .quick-add, .product-card:focus-within .quick-add { transform: translateY(0); opacity: 1; }
 	.quick-add:hover { background: white; }
+	.quick-add:hover span:last-child { transform: translateX(3px); }
+	.quick-add:active { transform: translateY(0) scale(.985); }
 	.product-meta { display: flex; justify-content: space-between; align-items: start; gap: 8px; padding-top: 13px; }
 	.product-meta h3 { margin: 0 0 5px; font-size: 11px; font-weight: 500; }
 	.product-meta h3 a { color: inherit; text-decoration: none; }

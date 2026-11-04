@@ -1,46 +1,33 @@
-# Astro Starter Kit: Basics
+# FORMA
+
+FORMA is a small, static Astro storefront for a considered home and lifestyle brand. It uses Astro components and file-based routing, with sample product data and vanilla JavaScript for browser interactions.
+
+## Run locally
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Production build
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+npm run build
+npm run preview
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+The static build is written to `dist/`.
 
-## 🧞 Commands
+## Pages
 
-All commands are run from the root of the project, from a terminal:
+- `/` — Homepage
+- `/shop` — Product catalog with search and category filters
+- `/about` — Brand story and values
+- `/products/[slug]` — Product details generated from `src/data/products.js`
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Project notes
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `src/components/` contains the shared header, footer, and product card.
+- `src/data/products.js` is the sample catalog; `src/data/cart.js` stores the demo cart in browser local storage.
+- Cart actions and newsletter validation are frontend-only. There is no checkout, subscription submission, backend, or database.
+- Product and lifestyle photography is loaded from Unsplash; fonts are loaded from Google Fonts.

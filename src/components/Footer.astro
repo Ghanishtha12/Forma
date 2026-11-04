@@ -1,0 +1,62 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="footer-main">
+		<div class="footer-brand">
+			<a class="brand" href="/">FORMA<span>.</span></a>
+			<p>Thoughtful home and lifestyle essentials for a life well lived.</p>
+			<a class="email-link" href="mailto:hello@forma.in">hello@forma.in <span aria-hidden="true">↗</span></a>
+		</div>
+		<div class="footer-column">
+			<h2>Explore</h2>
+			<a href="/shop">Shop all</a>
+			<a href="/#collections">Collections</a>
+			<a href="/about">Our story</a>
+			<a href="/about#promise">Our promise</a>
+		</div>
+		<div class="footer-column">
+			<h2>Here to help</h2>
+			<a href="mailto:hello@forma.in">Contact us</a>
+			<a href="mailto:hello@forma.in?subject=Shipping%20question">Shipping & delivery</a>
+			<a href="mailto:hello@forma.in?subject=Returns%20question">Returns & exchanges</a>
+			<a href="mailto:hello@forma.in?subject=Care%20question">Care guide</a>
+		</div>
+		<div class="footer-column">
+			<h2>Follow along</h2>
+			<a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram <span aria-hidden="true">↗</span></a>
+			<a href="https://www.pinterest.com/" target="_blank" rel="noreferrer">Pinterest <span aria-hidden="true">↗</span></a>
+			<a href="/#newsletter">Letters from FORMA</a>
+		</div>
+	</div>
+	<div class="footer-bottom">
+		<span>© {year} FORMA Living. Made for living.</span>
+		<span>Designed with intention <span class="footer-heart" aria-hidden="true">♡</span> in India</span>
+		<a href="/">Back to top ↑</a>
+	</div>
+</footer>
+
+<style>
+	.site-footer { padding: 62px 8vw 0; background: #2e302a; color: #f2f0e9; }
+	.footer-main { display: grid; grid-template-columns: 1.6fr 1fr 1.2fr 1fr; gap: 45px; padding-bottom: 55px; }
+	.brand { color: #f2f0e9; font-size: 23px; letter-spacing: .15em; font-weight: 500; text-decoration: none; }
+	.brand span { color: #a9ad8b; }
+	.footer-brand > p { color: #b7b7ac; max-width: 225px; font-size: 10px; line-height: 1.8; margin: 16px 0 18px; }
+	.email-link { color: #deddd3; display: inline-flex; gap: 13px; text-decoration: none; font-size: 9px; }
+	.footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+	.footer-column h2 { font-size: 9px; font-weight: 500; margin: 7px 0 9px; letter-spacing: .1em; }
+	.footer-column a { color: #b7b7ac; font-size: 9px; text-decoration: none; transition: color .2s; }
+	.footer-column a:hover, .email-link:hover { color: white; }
+	.footer-column a span { padding-left: 4px; }
+	.footer-bottom { min-height: 52px; border-top: 1px solid #ffffff24; display: flex; justify-content: space-between; align-items: center; gap: 15px; color: #aead9f; font-size: 8px; }
+	.footer-bottom a { text-decoration: none; color: inherit; }
+	.footer-heart { color: #c1a291; padding: 0 2px; }
+	@media(max-width: 680px) {
+		.site-footer { padding: 46px 7vw 0; }
+		.footer-main { grid-template-columns: 1fr 1fr; gap: 35px 20px; padding-bottom: 38px; }
+		.footer-brand { grid-column: 1 / -1; }
+		.footer-bottom { padding: 16px 0; min-height: 0; flex-wrap: wrap; line-height: 1.7; }
+		.footer-bottom > span:nth-child(2) { order: 1; width: 100%; }
+	}
+</style>

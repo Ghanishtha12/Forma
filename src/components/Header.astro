@@ -1,0 +1,154 @@
+<div class="announcement">
+	<span>Thoughtful things, delivered with care</span>
+	<span class="announcement-separator">·</span>
+	<span>Free shipping on orders above ₹1,999</span>
+</div>
+<header class="site-header">
+	<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">
+		<span></span><span></span>
+	</button>
+	<a class="brand" href="/" aria-label="FORMA home">FORMA<span class="brand-period">.</span></a>
+	<nav class="primary-navigation" id="primary-navigation" aria-label="Main navigation">
+		<a href="/">Home</a>
+		<a href="/shop">Shop</a>
+		<a href="/#collections">Collections</a>
+		<a href="/about">Our story</a>
+	</nav>
+	<div class="header-actions">
+		<button class="icon-action search-action" id="search-toggle" type="button" aria-label="Search products" aria-controls="search-panel">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+		</button>
+		<button class="icon-action cart-trigger" type="button" aria-label="Open shopping bag">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 12H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>
+			<span class="bag-label">Bag</span><span class="cart-count" id="cart-count" hidden>0</span>
+		</button>
+	</div>
+</header>
+<div class="search-panel" id="search-panel" hidden>
+	<div class="search-field">
+		<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+		<label class="sr-only" for="site-search">Search FORMA products</label>
+		<input id="site-search" type="search" placeholder="Search for something lovely…" autocomplete="off" />
+		<button type="button" id="search-clear" aria-label="Close search">×</button>
+	</div>
+	<p>Try “linen”, “lamp” or “ceramic”</p>
+</div>
+
+<script>
+	import { getCartCount, getCart } from '../data/cart.js';
+
+	const menuToggle = document.querySelector('.menu-toggle');
+	const navigation = document.querySelector('#primary-navigation');
+	const cartCount = document.querySelector('#cart-count');
+	const searchToggle = document.querySelector('#search-toggle');
+	const searchPanel = document.querySelector('#search-panel');
+	const searchInput = document.querySelector('#site-search');
+
+	function updateCartCount(cart = getCart()) {
+		const count = getCartCount(cart);
+		cartCount.textContent = count;
+		cartCount.hidden = count === 0;
+	}
+
+	updateCartCount();
+	window.addEventListener('forma:cart-updated', (event) => updateCartCount(event.detail.cart));
+
+	searchToggle.addEventListener('click', () => {
+		searchPanel.hidden = !searchPanel.hidden;
+		if (searchPanel.hidden) {
+			searchInput.value = '';
+			searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+		} else {
+			searchInput.focus();
+		}
+	});
+
+	document.querySelector('#search-clear').addEventListener('click', () => {
+		searchInput.value = '';
+		searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+		searchPanel.hidden = true;
+		searchToggle.focus();
+	});
+
+	searchInput.addEventListener('keydown', (event) => {
+		if (event.key !== 'Enter' || !searchInput.value.trim()) return;
+		if (window.location.pathname === '/') {
+			document.querySelector('#products')?.scrollIntoView({ behavior: 'smooth' });
+		} else if (window.location.pathname === '/shop') {
+			const shopSearch = document.querySelector('#shop-search');
+			if (shopSearch) {
+				shopSearch.value = searchInput.value.trim();
+				shopSearch.dispatchEvent(new Event('input', { bubbles: true }));
+			}
+		} else if (window.location.pathname !== '/shop') {
+			window.location.assign(`/shop?search=${encodeURIComponent(searchInput.value.trim())}`);
+		}
+	});
+
+	document.querySelector('.cart-trigger').addEventListener('click', () => {
+		if (document.querySelector('#cart-drawer')) return;
+		if (window.location.pathname === '/checkout') {
+			document.querySelector('.order-summary')?.scrollIntoView({ behavior: 'smooth' });
+			return;
+		}
+		window.location.assign('/checkout');
+	});
+
+	menuToggle.addEventListener('click', () => {
+		const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+		menuToggle.setAttribute('aria-expanded', String(!isOpen));
+		menuToggle.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+		navigation.classList.toggle('is-open', !isOpen);
+	});
+
+	navigation.querySelectorAll('a').forEach((link) => {
+		link.addEventListener('click', () => {
+			menuToggle.setAttribute('aria-expanded', 'false');
+			menuToggle.setAttribute('aria-label', 'Open menu');
+			navigation.classList.remove('is-open');
+		});
+	});
+</script>
+
+<style>
+	.announcement { min-height: 29px; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 6px 12px; background: #e6e5dc; color: #5e6053; font-size: 8px; letter-spacing: .075em; }
+	.announcement-separator { opacity: .6; }
+	.site-header { height: 76px; padding: 0 6vw; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; border-bottom: 1px solid #e8e6df; background: #f7f5f0; position: relative; z-index: 20; }
+	.brand { justify-self: start; font-size: 23px; letter-spacing: .15em; font-weight: 500; text-decoration: none; line-height: 1; }
+	.brand-period { color: #8b8e73; }
+	.primary-navigation { display: flex; justify-content: center; gap: clamp(24px, 3.2vw, 48px); }
+	.primary-navigation a { text-decoration: none; font-size: 9px; color: #56564f; transition: color .2s; }
+	.primary-navigation a:hover { color: #929779; }
+	.header-actions { justify-self: end; display: flex; align-items: center; gap: 18px; }
+	.icon-action { display: flex; align-items: center; gap: 5px; border: 0; background: transparent; padding: 6px 0; cursor: pointer; color: #33332d; }
+	.icon-action svg, .search-field svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; }
+	.bag-label { font-size: 9px; }
+	.cart-count { min-width: 15px; height: 15px; display: grid; place-items: center; background: #777c61; border-radius: 50%; color: white; font-size: 8px; }
+	.cart-count[hidden] { display: none; }
+	.menu-toggle { display: none; }
+	.search-panel { position: absolute; z-index: 19; top: 105px; left: 0; right: 0; padding: 17px 8vw 19px; background: #f7f5f0; border-bottom: 1px solid #e1dfd7; box-shadow: 0 10px 24px #26251e0b; }
+	.search-panel[hidden] { display: none; }
+	.search-field { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #c9c7bd; max-width: 690px; margin: auto; }
+	.search-field input { border: 0; outline: 0; background: transparent; flex: 1; padding: 13px 0; color: #272722; font-size: 13px; }
+	.search-field input::placeholder { color: #929087; }
+	.search-field button { border: 0; background: transparent; color: #66655d; font-size: 22px; cursor: pointer; }
+	.search-panel > p { max-width: 690px; margin: 9px auto 0; color: #89877f; font-size: 8px; }
+	.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+	@media(max-width: 680px) {
+		.announcement { font-size: 7px; gap: 6px; min-height: 27px; }
+		.site-header { height: 65px; padding: 0 6vw; grid-template-columns: 1fr 1fr 1fr; }
+		.menu-toggle { justify-self: start; display: flex; flex-direction: column; gap: 5px; border: 0; background: transparent; padding: 9px 5px 9px 0; cursor: pointer; }
+		.menu-toggle span { display: block; width: 19px; height: 1px; background: #33332d; transition: transform .2s; }
+		.menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
+		.menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3px) rotate(-45deg); }
+		.brand { justify-self: center; font-size: 21px; }
+		.header-actions { gap: 13px; }
+		.search-action svg { width: 17px; }
+		.bag-label { display: none; }
+		.primary-navigation { position: absolute; top: 65px; left: 0; right: 0; padding: 8px 7vw 20px; background: #f7f5f0; display: none; flex-direction: column; gap: 0; border-bottom: 1px solid #e8e6df; box-shadow: 0 12px 22px #26251e0a; }
+		.primary-navigation.is-open { display: flex; }
+		.primary-navigation a { padding: 13px 0; border-bottom: 1px solid #e8e6df; font-size: 11px; }
+		.primary-navigation a:last-child { border-bottom: 0; }
+		.search-panel { top: 92px; padding-inline: 7vw; }
+	}
+</style>

@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+	title="Demo Order Confirmation — FORMA"
+	description="Your FORMA demo order confirmation. No payment has been processed."
+>
+	<Header />
+	<main class="success-page">
+		<section class="success-card" aria-labelledby="success-title">
+			<div class="success-mark" aria-hidden="true">✓</div>
+			<p class="eyebrow">A lovely choice</p>
+			<h1 id="success-title">Your demo order<br />is <em>confirmed.</em></h1>
+			<p class="demo-disclaimer">
+				This is a frontend demo order. No payment has been processed and no details were sent to a
+				server.
+			</p>
+			<div class="order-number">
+				<span>Order number</span>
+				<strong id="order-number">—</strong>
+			</div>
+			<div class="success-details" id="success-details"></div>
+			<div class="success-items" id="success-items"></div>
+			<div class="success-total"><span>Demo order total</span><strong id="success-total">₹0</strong></div>
+			<a class="return-link" href="/shop">Back to the collection <span aria-hidden="true">↗</span></a>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+<script>
+	import { formatPrice } from '../data/products.js';
+
+	const orderNumber = document.querySelector('#order-number');
+	const successDetails = document.querySelector('#success-details');
+	const successItems = document.querySelector('#success-items');
+	const successTotal = document.querySelector('#success-total');
+	let order;
+
+	try {
+		order = JSON.parse(sessionStorage.getItem('forma-demo-order') || 'null');
+	} catch (error) {
+		console.error('Unable to read the saved demo order.', error);
+	}
+
+	if (!order || !Array.isArray(order.products)) {
+		successDetails.textContent = 'No recent demo order was found in this browser session.';
+		successTotal.textContent = '—';
+	} else {
+		orderNumber.textContent = order.number;
+		successDetails.textContent = `Delivery: ${order.deliveryMethod === 'express' ? 'Express Delivery' : 'Standard Delivery'} · Payment: ${order.paymentMethod}`;
+		order.products.forEach((product) => {
+			const row = document.createElement('div');
+			row.className = 'success-item';
+			const name = document.createElement('span');
+			name.textContent = `${product.name} × ${product.quantity}`;
+			const price = document.createElement('strong');
+			price.textContent = formatPrice(product.price * product.quantity);
+			row.append(name, price);
+			successItems.append(row);
+		});
+		successTotal.textContent = formatPrice(order.total);
+	}
+</script>
+
+<style>
+	:global(body) { background: #f7f5f0; color: #272722; font-family: 'DM Sans', Arial, sans-serif; }
+	.success-page { padding: 65px 6vw 90px; }
+	.success-card { width: min(100%, 630px); margin: 0 auto; padding: 45px clamp(23px, 7vw, 70px); background: #efede7; text-align: center; }
+	.success-mark { width: 43px; height: 43px; display: grid; place-items: center; margin: 0 auto 21px; border: 1px solid #969a7c; border-radius: 50%; color: #6d7158; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; }
+	.eyebrow { margin: 0 0 13px; color: #6d7158; font-size: 9px; font-weight: 600; letter-spacing: .19em; text-transform: uppercase; }
+	.success-card h1 { font-size: clamp(39px, 5vw, 55px); font-weight: 400; line-height: .98; letter-spacing: -.045em; margin: 0; }
+	.success-card h1 em { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; }
+	.demo-disclaimer { max-width: 390px; margin: 18px auto 23px; color: #77766f; font-size: 9px; line-height: 1.8; }
+	.order-number { padding: 13px 0; border-top: 1px solid #d9d6cd; border-bottom: 1px solid #d9d6cd; display: flex; justify-content: space-between; gap: 10px; font-size: 9px; }
+	.order-number span { color: #77766f; }
+	.order-number strong { font-weight: 500; }
+	.success-details { padding: 17px 0 12px; color: #6f6e67; font-size: 9px; line-height: 1.7; }
+	.success-items { border-top: 1px solid #d9d6cd; }
+	.success-item { display: flex; justify-content: space-between; gap: 15px; padding: 11px 0; border-bottom: 1px solid #d9d6cd; text-align: left; font-size: 9px; }
+	.success-item strong { white-space: nowrap; font-weight: 500; }
+	.success-total { display: flex; justify-content: space-between; padding: 17px 0; font-size: 11px; }
+	.success-total strong { font-weight: 500; }
+	.return-link { display: inline-flex; gap: 17px; margin-top: 12px; padding: 14px 18px; background: #272722; color: white; text-decoration: none; font-size: 9px; transition: background .2s; }
+	.return-link:hover { background: #6d7158; }
+	@media(max-width: 680px) {
+		.success-page { padding: 42px 5vw 65px; }
+		.success-card { padding: 35px 20px; }
+	}
+</style>
